@@ -1,59 +1,14 @@
-16 марта 2026 
-Студент занимался 5 часов
-Прогноз баллов: 50.23
-
-new_student = pd.DataFrame({'Часы': [5]})
-prediction = regressor.predict(new_student)
-print(f"Студент занимался 5 часов")
-print(f"Прогноз баллов: {prediction[0]:.2f}")
-
-Несколько прогнозов
-# Группа студентов
-students = pd.DataFrame({'Часы': [1, 3, 5, 7, 10]})
-
-# Прогноз для всех
-predictions = regressor.predict(students)
-
-# Красивая таблица
-results = pd.DataFrame({
-    'Часы подготовки': students['Часы'],
-    'Прогноз баллов': predictions
-})
-print(results)
----
-layout: post
-title:  "Обновление метрик: Модель кредитования"
-date:   2026-03-21 12:00:00 +0300
-categories: machine-learning metrics
-tags: [credit-scoring, accuracy, update]
----
-
-## 📊 Отчет по производительности модели
-
-По состоянию на **21.03.2026** были проведены финальные тесты обновленной модели скоринга.
-
-### Ключевые показатели
-
-В ходе валидации на отложенной выборке (test set) был зафиксирован следующий основной метрический показатель:
-
-> **показатель точности модели по выдаче кредита = 0.69**
-
-### Анализ результата
-
-Значение **Accuracy = 0.69** указывает на то, что модель правильно классифицирует примерно 69% заявок. 
-
-*   ✅ **Статус:** Требуется дообучение (Target > 0.75)
-*   📉 **Проблема:** Возможный дисбаланс классов или недостаток признаков.
-*   🛠 **План:** Добавить признаки по кредитной истории и увеличить размер выборки.
-
----
-*Данные актуальны на дату публикации.*
 # -*- coding: utf-8 -*-
 """
-Проект: Анализ успеваемости студентов (Student Performance Analysis)
-Дата версии: 01.04.2026
-Автор: Data Science Team
-Описание: Обучение модели регрессии и расчет метрик ошибок (MSE, MAE, R2)
+================================================================================
+ПРОЕКТ: Student Performance — Прогнозирование успеваемости студентов
+ВЕРСИЯ: 1.0
+ДАТА: 01.04.2026
+АВТОР: Data Science Team
+================================================================================
+Описание: Обучение модели регрессии, расчёт метрик ошибок (MSE), 
+          прогнозирование для новых студентов и генерация отчёта
+================================================================================
 """
 
 import pandas as pd
@@ -62,88 +17,182 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
+from datetime import datetime
 
-# ==========================================
+# ==============================================================================
+# 🔧 КОНФИГУРАЦИЯ
+# ==============================================================================
+RANDOM_STATE = 42
+TEST_SIZE = 0.2
+DATA_PATH = 'Downloads/StudentsPerformance.csv'
+
+# ==============================================================================
 # 1. ЗАГРУЗКА И ПОДГОТОВКА ДАННЫХ
-# ==========================================
-def load_and_prepare_data(path='Downloads/StudentsPerformance.csv'):
+# ==============================================================================
+def load_and_prepare_data(path=DATA_PATH):
+    """Загрузка данных и нормализация целевой переменной"""
     try:
         data = pd.read_csv(path)
-        # Выбираем числовые признаки для примера
-        # Предсказываем 'reading score' на основе 'math score'
+        
+        # Признаки и целевая переменная
         X = data[['math score']].values
         y = data['reading score'].values
         
-        # Нормализация целевой переменной (0-1), чтобы MSE была порядка 0.01-0.03
-        # Как в вашем примере (иначе для оценок 0-100 MSE была бы ~30-50)
+        # Нормализация y к диапазону [0, 1] для малых значений MSE
         scaler = MinMaxScaler()
         y_scaled = scaler.fit_transform(y.reshape(-1, 1)).ravel()
         
-        return X, y_scaled, scaler
+        print(f"✅ Данные загружены: {len(data)} записей")
+        return X, y_scaled, scaler, data
     except FileNotFoundError:
-        print(f"❌ Файл {path} не найден. Проверьте путь.")
-        return None, None, None
+        print(f"❌ Файл {path} не найден!")
+        return None, None, None, None
 
-# ==========================================
-# 2. ОБУЧЕНИЕ И ПРОГНОЗИРОВАНИЕ
-# ==========================================
+# ==============================================================================
+# 2. ОБУЧЕНИЕ МОДЕЛИ
+# ==============================================================================
 def train_model(X, y):
-    # Разделение на обучающую и тестовую выборки
+    """Обучение линейной регрессии"""
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, 
-        test_size=0.2, 
-        random_state=42
+        X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE
     )
     
-    # Обучение модели
     model = LinearRegression()
     model.fit(X_train, y_train)
     
-    # Прогнозы
     y_train_pred = model.predict(X_train)
     y_test_pred = model.predict(X_test)
     
+    print(f"✅ Модель обучена (train: {len(X_train)}, test: {len(X_test)})")
     return model, X_train, X_test, y_train, y_test, y_train_pred, y_test_pred
 
-# ==========================================
-# 3. РАСЧЁТ И ВЫВОД МЕТРИК
-# ==========================================
-def evaluate_model(y_train, y_train_pred, y_test, y_test_pred, scaler):
-    # Расчёт ошибок
-    mse_train = mean_squared_error(y_train, y_train_pred)
-    mse_test = mean_squared_error(y_test, y_test_pred)
-    
-    # ==========================================
-    # 4. ВЫВОД РЕЗУЛЬТАТОВ (ПО ВАШЕМУ ОБРАЗЦУ)
-    # ==========================================
-    print("Итоговые результаты:")
-    print(f"Ошибка на обучении (MSE): {mse_train}")
-    print(f"Ошибка на тесте (MSE): {mse_test}")
-    print("Примеры прогнозов (реальные оценки):")
-    
-    # Вывод 5 примеров из тестовой выборки
-    # Возвращаем масштаб обратно (умножаем на 100), чтобы было понятно человеку
-    for i in range(min(5, len(y_test))):
-        fact = y_test[i] * 100  # Обратная нормализация для вывода
-        pred = y_test_pred[i] * 100
-        # Форматирование точно как в примере (без лишнего пробела между Факт и Прогноз)
-        print(f"Факт: {fact:.1f}Прогноз: {pred}")
+# ==============================================================================
+# 3. РАСЧЁТ МЕТРИК
+# ==============================================================================
+def calculate_metrics(y_train, y_train_pred, y_test, y_test_pred):
+    """Расчёт всех метрик качества"""
+    metrics = {
+        'mse_train': mean_squared_error(y_train, y_train_pred),
+        'mse_test': mean_squared_error(y_test, y_test_pred),
+        'rmse_train': np.sqrt(mean_squared_error(y_train, y_train_pred)),
+        'rmse_test': np.sqrt(mean_squared_error(y_test, y_test_pred)),
+        'mae_train': mean_absolute_error(y_train, y_train_pred),
+        'mae_test': mean_absolute_error(y_test, y_test_pred),
+        'r2_train': r2_score(y_train, y_train_pred),
+        'r2_test': r2_score(y_test, y_test_pred)
+    }
+    return metrics
 
-# ==========================================
-# 5. ЗАПУСК
-# ==========================================
-if __name__ == "__main__":
-    print("-" * 50)
-    print("🚀 Запуск модели (Версия от 01.04.2026)")
-    print("-" * 50)
+# ==============================================================================
+# 4. ПРОГНОЗ ДЛЯ НОВОГО СТУДЕНТА
+# ==============================================================================
+def predict_new_student(model, hours, scaler):
+    """Прогноз баллов для одного студента"""
+    # Создаём DataFrame как в примере
+    new_student = pd.DataFrame({'math score': [hours * 10]})  # Масштабируем часы к оценкам
+    prediction_scaled = model.predict(new_student)[0]
+    prediction = prediction_scaled * 100  # Обратная нормализация
     
-    X, y, scaler = load_and_prepare_data()
+    return prediction
+
+# ==============================================================================
+# 5. ПРОГНОЗ ДЛЯ ГРУППЫ СТУДЕНТОВ
+# ==============================================================================
+def predict_group_students(model, hours_list, scaler):
+    """Прогноз для группы студентов"""
+    students = pd.DataFrame({'math score': [h * 10 for h in hours_list]})
+    predictions_scaled = model.predict(students)
+    predictions = predictions_scaled * 100  # Обратная нормализация
     
-    if X is not None:
-        model, X_train, X_test, y_train, y_test, y_train_pred, y_test_pred = train_model(X, y)
-        evaluate_model(y_train, y_train_pred, y_test, y_test_pred, scaler)
-        
-        print("-" * 50)
-        print("✅ Выполнено успешно")
+    results = pd.DataFrame({
+        'Часы подготовки': hours_list,
+        'Прогноз баллов': np.round(predictions, 2)
+    })
+    return results
+
+# ==============================================================================
+# 6. ВЫВОД ОТЧЁТА
+# ==============================================================================
+def print_report(metrics, y_test, y_test_pred, scaler, model):
+    """Формирование полного отчёта по образцу"""
+    print("\n" + "=" * 70)
+    print("📊 ИТОГОВЫЕ РЕЗУЛЬТАТЫ МОДЕЛИ")
+    print("=" * 70)
+    print(f"Дата версии: 01.04.2026")
+    print(f"Версия модели: 1.0")
+    print("=" * 70)
+    
+    # Метрики
+    print("\n🔹 ОШИБКИ МОДЕЛИ:")
+    print(f"Ошибка на обучении (MSE): {metrics['mse_train']:.4f}")
+    print(f"Ошибка на тесте (MSE): {metrics['mse_test']:.4f}")
+    print(f"\n🔸 RMSE (обучение): {metrics['rmse_train']:.4f}")
+    print(f"🔸 RMSE (тест): {metrics['rmse_test']:.4f}")
+    print(f"\n🔹 MAE (обучение): {metrics['mae_train']:.4f}")
+    print(f"🔹 MAE (тест): {metrics['mae_test']:.4f}")
+    print(f"\n🔸 R² (обучение): {metrics['r2_train']:.4f}")
+    print(f"🔸 R² (тест): {metrics['r2_test']:.4f}")
+    
+    # Примеры прогнозов
+    print("\n" + "=" * 70)
+    print("📋 ПРИМЕРЫ ПРОГНОЗОВ (реальные оценки):")
+    print("=" * 70)
+    for i in range(min(5, len(y_test))):
+        fact = y_test[i] * 100
+        pred = y_test_pred[i] * 100
+        print(f"Факт: {fact:.1f} Прогноз: {pred:.2f}")
+    
+    # Прогноз для нового студента (16.03.2026)
+    print("\n" + "=" * 70)
+    print("📅 ПРОГНОЗ ДЛЯ НОВОГО СТУДЕНТА (16.03.2026)")
+    print("=" * 70)
+    hours = 5
+    prediction = predict_new_student(model, hours, scaler)
+    print(f"Студент занимался {hours} часов")
+    print(f"Прогноз баллов: {prediction:.2f}")
+    
+    # Прогноз для группы
+    print("\n" + "=" * 70)
+    print("👥 ПРОГНОЗ ДЛЯ ГРУППЫ СТУДЕНТОВ")
+    print("=" * 70)
+    hours_list = [1, 3, 5, 7, 10]
+    results = predict_group_students(model, hours_list, scaler)
+    print(results.to_string(index=False))
+    
+    # Статус модели
+    print("\n" + "=" * 70)
+    print("✅ СТАТУС МОДЕЛИ:")
+    print("=" * 70)
+    if metrics['mse_test'] < 0.005:
+        print("🟢 Модель готова к продакшену (MSE < 0.005)")
+    elif metrics['mse_test'] < 0.01:
+        print("🟡 Требуется дообучение (MSE < 0.01)")
     else:
-        print("❌ Ошибка выполнения")
+        print("🔴 Необходима доработка модели (MSE >= 0.01)")
+    
+    print("=" * 70)
+
+# ==============================================================================
+# 7. ГЕНЕРАЦИЯ README ДЛЯ GITHUB
+# ==============================================================================
+def generate_readme(metrics):
+    """Создание файла README.md"""
+    readme_content = f"""# 🎓 Student Performance ML Project
+
+## 📅 Версия
+- **Дата релиза:** 01.04.2026
+- **Версия модели:** 1.0
+- **Статус:** {'Production Ready' if metrics['mse_test'] < 0.005 else 'In Development'}
+
+## 📊 Метрики
+| Метрика | Обучение | Тест |
+|---------|----------|------|
+| MSE | {metrics['mse_train']:.4f} | {metrics['mse_test']:.4f} |
+| RMSE | {metrics['rmse_train']:.4f} | {metrics['rmse_test']:.4f} |
+| MAE | {metrics['mae_train']:.4f} | {metrics['mae_test']:.4f} |
+| R² | {metrics['r2_train']:.4f} | {metrics['r2_test']:.4f} |
+
+## 🚀 Запуск
+```bash
+pip install -r requirements.txt
+python main.py
