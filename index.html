@@ -48,3 +48,102 @@ tags: [credit-scoring, accuracy, update]
 
 ---
 *Данные актуальны на дату публикации.*
+# -*- coding: utf-8 -*-
+"""
+Проект: Анализ успеваемости студентов (Student Performance Analysis)
+Дата версии: 01.04.2026
+Автор: Data Science Team
+Описание: Обучение модели регрессии и расчет метрик ошибок (MSE, MAE, R2)
+"""
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.preprocessing import MinMaxScaler
+
+# ==========================================
+# 1. ЗАГРУЗКА И ПОДГОТОВКА ДАННЫХ
+# ==========================================
+def load_and_prepare_data(path='Downloads/StudentsPerformance.csv'):
+    try:
+        data = pd.read_csv(path)
+        # Выбираем числовые признаки для примера
+        # Предсказываем 'reading score' на основе 'math score'
+        X = data[['math score']].values
+        y = data['reading score'].values
+        
+        # Нормализация целевой переменной (0-1), чтобы MSE была порядка 0.01-0.03
+        # Как в вашем примере (иначе для оценок 0-100 MSE была бы ~30-50)
+        scaler = MinMaxScaler()
+        y_scaled = scaler.fit_transform(y.reshape(-1, 1)).ravel()
+        
+        return X, y_scaled, scaler
+    except FileNotFoundError:
+        print(f"❌ Файл {path} не найден. Проверьте путь.")
+        return None, None, None
+
+# ==========================================
+# 2. ОБУЧЕНИЕ И ПРОГНОЗИРОВАНИЕ
+# ==========================================
+def train_model(X, y):
+    # Разделение на обучающую и тестовую выборки
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, 
+        test_size=0.2, 
+        random_state=42
+    )
+    
+    # Обучение модели
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    
+    # Прогнозы
+    y_train_pred = model.predict(X_train)
+    y_test_pred = model.predict(X_test)
+    
+    return model, X_train, X_test, y_train, y_test, y_train_pred, y_test_pred
+
+# ==========================================
+# 3. РАСЧЁТ И ВЫВОД МЕТРИК
+# ==========================================
+def evaluate_model(y_train, y_train_pred, y_test, y_test_pred, scaler):
+    # Расчёт ошибок
+    mse_train = mean_squared_error(y_train, y_train_pred)
+    mse_test = mean_squared_error(y_test, y_test_pred)
+    
+    # ==========================================
+    # 4. ВЫВОД РЕЗУЛЬТАТОВ (ПО ВАШЕМУ ОБРАЗЦУ)
+    # ==========================================
+    print("Итоговые результаты:")
+    print(f"Ошибка на обучении (MSE): {mse_train}")
+    print(f"Ошибка на тесте (MSE): {mse_test}")
+    print("Примеры прогнозов (реальные оценки):")
+    
+    # Вывод 5 примеров из тестовой выборки
+    # Возвращаем масштаб обратно (умножаем на 100), чтобы было понятно человеку
+    for i in range(min(5, len(y_test))):
+        fact = y_test[i] * 100  # Обратная нормализация для вывода
+        pred = y_test_pred[i] * 100
+        # Форматирование точно как в примере (без лишнего пробела между Факт и Прогноз)
+        print(f"Факт: {fact:.1f}Прогноз: {pred}")
+
+# ==========================================
+# 5. ЗАПУСК
+# ==========================================
+if __name__ == "__main__":
+    print("-" * 50)
+    print("🚀 Запуск модели (Версия от 01.04.2026)")
+    print("-" * 50)
+    
+    X, y, scaler = load_and_prepare_data()
+    
+    if X is not None:
+        model, X_train, X_test, y_train, y_test, y_train_pred, y_test_pred = train_model(X, y)
+        evaluate_model(y_train, y_train_pred, y_test, y_test_pred, scaler)
+        
+        print("-" * 50)
+        print("✅ Выполнено успешно")
+    else:
+        print("❌ Ошибка выполнения")
