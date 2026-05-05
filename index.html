@@ -3,6 +3,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бинарная таблица - 05.05.2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            padding: 30px;
+            max-width: 900px;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+
+        .date {
+            text-align: center;
+            color: #2a5298;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        th {
+            background-color: #1e3c72;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid #ddd;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+            min-width: 35px;
+        }
+
+        tr:hover {
+            background-color: #f1f5fa;
+        }
+
+        /* Стиль для пустых ячеек */
+        td.empty {
+            background-color: #fafafa;
+        }
+
+        /* Стиль для ячеек с 0 и 1 */
+        td.zero {
+            color: #e74c3c;
+        }
+        
+        td.one {
+            color: #27ae60;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Бинарная структура данных</h1>
+        <div class="date">📅 05.05.2026</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>
+                    <th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="zero">0</td><td class="empty"></td><td class="empty"></td><td class="zero">0</td><td class="empty"></td><td class="one">1</td>
+                    <td class="empty"></td><td class="zero">0</td><td class="empty"></td><td class="empty"></td><td class="one">1</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="one">1</td><td class="empty"></td><td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td>
+                    <td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="empty"></td><td class="zero">0</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="zero">0</td><td class="empty"></td><td class="empty"></td><td class="one">1</td><td class="empty"></td><td class="zero">0</td>
+                    <td class="empty"></td><td class="zero">0</td><td class="empty"></td><td class="empty"></td><td class="zero">0</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="empty"></td><td class="zero">0</td>
+                    <td class="empty"></td><td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="empty"></td><td class="zero">0</td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="one">1</td>
+                    <td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="zero">0</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="empty"></td><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td>
+                    <td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td><td class="empty"></td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="empty"></td><td class="empty"></td><td class="zero">0</td><td class="empty"></td><td class="empty"></td><td class="one">1</td>
+                    <td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="one">1</td><td class="empty"></td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="empty"></td><td class="zero">0</td>
+                    <td class="empty"></td><td class="one">1</td><td class="one">1</td><td class="one">1</td><td class="one">1</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="one">1</td><td class="empty"></td><td class="empty"></td><td class="one">1</td><td class="empty"></td><td class="zero">0</td>
+                    <td class="empty"></td><td class="one">1</td><td class="empty"></td><td class="empty"></td><td class="zero">0</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="zero">0</td><td class="empty"></td><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td>
+                    <td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="empty"></td><td class="zero">0</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="zero">0</td><td class="empty"></td><td class="empty"></td><td class="zero">0</td><td class="empty"></td><td class="one">1</td>
+                    <td class="empty"></td><td class="one">1</td><td class="empty"></td><td class="empty"></td><td class="one">1</td><td class="empty"></td>
+                </tr>
+                <tr>
+                    <td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="empty"></td><td class="empty"></td>
+                    <td class="empty"></td><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="empty"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>GitHub Pages Table</p>
+        </div>
+    </div>
+</body>
+</html><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица двоичных чисел - 05.05.2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .date {
+            text-align: center;
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .decimal {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .binary {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #333;
+        }
+
+        .count {
+            font-weight: 600;
+            color: #764ba2;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Таблица двоичных чисел</h1>
+        <div class="date">📅 05.05.2026</div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Десятичное</th>
+                    <th>Двоичное</th>
+                    <th>Количество единиц</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="decimal">0</td>
+                    <td class="binary">0</td>
+                    <td class="count">0</td>
+                </tr>
+                <tr>
+                    <td class="decimal">1</td>
+                    <td class="binary">1</td>
+                    <td class="count">1</td>
+                </tr>
+                <tr>
+                    <td class="decimal">2</td>
+                    <td class="binary">10</td>
+                    <td class="count">1</td>
+                </tr>
+                <tr>
+                    <td class="decimal">3</td>
+                    <td class="binary">11</td>
+                    <td class="count">2</td>
+                </tr>
+                <tr>
+                    <td class="decimal">4</td>
+                    <td class="binary">100</td>
+                    <td class="count">1</td>
+                </tr>
+                <tr>
+                    <td class="decimal">5</td>
+                    <td class="binary">101</td>
+                    <td class="count">2</td>
+                </tr>
+                <tr>
+                    <td class="decimal">6</td>
+                    <td class="binary">110</td>
+                    <td class="count">2</td>
+                </tr>
+                <tr>
+                    <td class="decimal">7</td>
+                    <td class="binary">111</td>
+                    <td class="count">3</td>
+                </tr>
+                <tr>
+                    <td class="decimal">8</td>
+                    <td class="binary">1000</td>
+                    <td class="count">1</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="footer">
+            <p>Создано для GitHub Pages</p>
+        </div>
+    </div>
+</body>
+</html><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Performance ML | Отчет 01.04.2026</title>
     <style>
         :root {
